@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {Avatar, IconButton} from '@material-ui/core'
 import ChatIcon from '@material-ui/icons/Chat'
 import DonutLargeIcon from "@material-ui/icons/DonutLarge"
@@ -7,11 +7,13 @@ import {SearchOutlined} from "@material-ui/icons"
 import SidebarChat from './SidebarChat'
 import db from './firebase'
 import './Sidebar.css'
+import { AppContext } from './App'
 
 export default function Sidebar() {
     const [rooms, setRooms] = useState([]);   
-    
+    const context = useContext(AppContext);
     useEffect(()=>{
+        console.log(context);
         const unsubscribe =  db.collection('rooms').onSnapshot(snapshot => {
             setRooms(
                 snapshot.docs.map(doc => ({
@@ -27,7 +29,7 @@ export default function Sidebar() {
     return (
         <div className="sidebar">
             <div className="sidebar__header">
-                <Avatar />
+                <Avatar src={context.user.get.user.photoURL} />
                 <div className="sidebar__headerRight">
                     <IconButton>
                         <DonutLargeIcon/>
