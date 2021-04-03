@@ -13,7 +13,7 @@ export default function Sidebar() {
     const [rooms, setRooms] = useState([]);   
     const context = useContext(AppContext);
     useEffect(()=>{
-        console.log(context);
+        // console.log(context);
         const unsubscribe =  db.collection('rooms').onSnapshot(snapshot => {
             setRooms(
                 snapshot.docs.map(doc => ({

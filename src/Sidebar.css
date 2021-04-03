@@ -64,3 +64,8 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+a {
+  text-decoration: none !important; 
+  color: black;
+}
