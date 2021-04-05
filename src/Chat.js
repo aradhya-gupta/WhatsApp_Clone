@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom"
 import db from './firebase';
 import {AppContext} from './App'
 import firebase from "firebase"
+import 'emoji-mart/css/emoji-mart.css'
+import {Picker} from 'emoji-mart'
 import './Chat.css';
 
 function Chat() {
@@ -15,6 +17,7 @@ function Chat() {
     const { roomId } = useParams();
     const [roomName, setRoomName] = useState("");
     const [messages, setMessages] = useState([]);
+    const [displayEmoticons, setDisplayEmoticons] = useState(false); 
     const context = useContext(AppContext); 
     const user =  context.user.get.user; 
     useEffect(() => {
@@ -37,6 +40,11 @@ function Chat() {
         setSeed(Math.floor(Math.random() * 5030));
     }, [roomId]);
 
+    const addEmoji = (e)=>{
+        let emoji = e.native; 
+        setInput(input+emoji); 
+    }
+
     const sendMessage = (e) => {
         e.preventDefault();
         db.collection('rooms')
@@ -50,7 +58,9 @@ function Chat() {
         })
         setInput("");
     }
-
+    const showEmoticons = ()=>{
+        setDisplayEmoticons(!displayEmoticons); 
+    }
     return (
         <div className="chat">
             <div className="chat__header">
@@ -83,8 +93,9 @@ function Chat() {
             </div>
 
             <div className="chat__footer">
-                <IconButton>
-                    <InsertEmoticon />
+                <IconButton onClick={showEmoticons}>
+                    <InsertEmoticon  />
+                    <Picker style={{position:'absolute', bottom:'20px', display: `${displayEmoticons?'':'none'}`}} onSelect={addEmoji} onClick={(emoji, event)=>setDisplayEmoticons(false)} perLine={5} title="" showPreview={true}/>
                 </IconButton>
                 <form>
                     <input value={input} onChange={e => setInput(e.target.value)} type="text" placeholder="Type a message" />
