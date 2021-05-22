@@ -5,10 +5,10 @@ import { AttachFile, SearchOutlined, InsertEmoticon } from "@material-ui/icons"
 import MicIcon from "@material-ui/icons/Mic"
 import { useParams } from "react-router-dom"
 import db from './firebase';
-import {AppContext} from './App'
+import { AppContext } from './App'
 import firebase from "firebase"
 import 'emoji-mart/css/emoji-mart.css'
-import {Picker} from 'emoji-mart'
+import { Picker } from 'emoji-mart'
 import './Chat.css';
 
 function Chat() {
@@ -17,9 +17,9 @@ function Chat() {
     const { roomId } = useParams();
     const [roomName, setRoomName] = useState("");
     const [messages, setMessages] = useState([]);
-    const [displayEmoticons, setDisplayEmoticons] = useState(false); 
-    const context = useContext(AppContext); 
-    const user =  context.user.get.user; 
+    const [displayEmoticons, setDisplayEmoticons] = useState(false);
+    const context = useContext(AppContext);
+    const user = context.user.get.user;
     useEffect(() => {
         if (roomId) {
             db.collection('rooms').doc(roomId).onSnapshot(snapshot => (
@@ -27,12 +27,12 @@ function Chat() {
             ))
 
             db.collection('rooms')
-            .doc(roomId)
-            .collection('messages')
-            .orderBy('timestamp', 'asc')
-            .onSnapshot(snapshot => (
-                setMessages(snapshot.docs.map(doc => doc.data()))
-            ))
+                .doc(roomId)
+                .collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot(snapshot => (
+                    setMessages(snapshot.docs.map(doc => doc.data()))
+                ))
         }
     }, [roomId])
 
@@ -40,26 +40,26 @@ function Chat() {
         setSeed(Math.floor(Math.random() * 5030));
     }, [roomId]);
 
-    const addEmoji = (e)=>{
-        let emoji = e.native; 
-        setInput(input+emoji); 
+    const addEmoji = (e) => {
+        let emoji = e.native;
+        setInput(input + emoji);
     }
 
     const sendMessage = (e) => {
         e.preventDefault();
         db.collection('rooms')
-        .doc(roomId)
-        .collection('messages')
-        .add({
-            message: input, 
-            name: user.displayName, 
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(), 
-            userId: user.email
-        })
+            .doc(roomId)
+            .collection('messages')
+            .add({
+                message: input,
+                name: user.displayName,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                userId: user.email
+            })
         setInput("");
     }
-    const showEmoticons = ()=>{
-        setDisplayEmoticons(!displayEmoticons); 
+    const showEmoticons = () => {
+        setDisplayEmoticons(!displayEmoticons);
     }
     return (
         <div className="chat">
@@ -68,7 +68,7 @@ function Chat() {
 
                 <div className="chat__headerInfo">
                     <h3>{roomName}</h3>
-                    <p>last seen{new Date(messages[messages.length-1]?.timestamp?.toDate()).toUTCString()}</p>
+                    <p>last seen{new Date(messages[messages.length - 1]?.timestamp?.toDate()).toUTCString()}</p>
                 </div>
 
                 <div className="chat__headerRight">
@@ -85,18 +85,21 @@ function Chat() {
             </div>
 
             <div className="chat__body">
-                {messages.map(m=>(
+                {messages.map(m => (
                     <p id={m.id} className={`chat__message ${m.userId === user.email && `chat__receiver`}`}><span className="chat__name">{m.name}</span>
-                    {m.message}
-                    <span className="chat__timestamp">{new Date(m.timestamp?.toDate()).toUTCString()}</span></p>
+                        {m.message}
+                        <span className="chat__timestamp">{new Date(m.timestamp?.toDate()).toUTCString()}</span></p>
                 ))}
             </div>
 
             <div className="chat__footer">
                 <IconButton onClick={showEmoticons}>
-                    <InsertEmoticon  />
-                    <Picker style={{position:'absolute', bottom:'20px', display: `${displayEmoticons?'':'none'}`}} onSelect={addEmoji} onClick={(emoji, event)=>setDisplayEmoticons(false)} perLine={5} title="" showPreview={true}/>
+                    <InsertEmoticon />
                 </IconButton>
+                <Picker style={{
+                    position: 'absolute', bottom: '20vh',
+                    left: '36.45vw', display: `${displayEmoticons ? '' : 'none'}`
+                }} onSelect={addEmoji} perLine={6} title="" autoFocus={true} />
                 <form>
                     <input value={input} onChange={e => setInput(e.target.value)} type="text" placeholder="Type a message" />
                     <button onClick={sendMessage} type="submit">Send a message</button>
