@@ -7,8 +7,8 @@ import { useParams } from "react-router-dom"
 import db from './firebase';
 import { AppContext } from './App'
 import firebase from "firebase"
-import 'emoji-mart/css/emoji-mart.css'
-import { Picker } from 'emoji-mart'
+// import data from '@emoji-mart/data'
+// import { Picker } from 'emoji-mart'
 import './Chat.css';
 
 function Chat() {
@@ -96,10 +96,10 @@ function Chat() {
                 <IconButton onClick={showEmoticons}>
                     <InsertEmoticon />
                 </IconButton>
-                <Picker style={{
+                {/* <Picker data={data} style={{
                     position: 'absolute', bottom: '20vh',
                     left: '36.45vw', display: `${displayEmoticons ? '' : 'none'}`
-                }} onSelect={addEmoji} perLine={6} title="" autoFocus={true} />
+                }} onSelect={addEmoji} perLine={6} title="" autoFocus={true} /> */}
                 <form>
                     <input value={input} onChange={e => setInput(e.target.value)} type="text" placeholder="Type a message" />
                     <button onClick={sendMessage} type="submit">Send a message</button>
